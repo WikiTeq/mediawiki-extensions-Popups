@@ -5,6 +5,7 @@
 import constants from '../constants';
 import createMediaWikiApiGateway from './mediawiki';
 import createRESTBaseGateway from './rest';
+import createRestOpenSearchGateWay from './restWithSearch';
 import * as formatters from './restFormatters';
 
 /**
@@ -26,6 +27,16 @@ export default function createPagePreviewGateway( config ) {
 		case 'restbasePlain':
 			return createRESTBaseGateway(
 				$.ajax, restConfig, formatters.parsePlainTextResponse );
+		case 'restbaseWithSearch':
+			return createRestOpenSearchGateWay(
+				$.ajax,
+				restConfig,
+				formatters.parsePlainTextResponse,
+				new mw.ForeignApi(
+					'//en.wikipedia.org/w/api.php',
+					{ anonymous: true }
+				)
+			);
 		case 'restbaseHTML':
 			return createRESTBaseGateway(
 				$.ajax, restConfig, formatters.parseHTMLResponse );

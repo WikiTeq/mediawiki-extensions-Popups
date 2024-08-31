@@ -38,6 +38,13 @@ export function getTitle( href, config ) {
 		return undefined;
 	}
 
+	// If pages that do not exist locally, ignore that, since we are fetching
+	// from the English Wikipedia
+	if ( linkHref.query.redlink === '1' && linkHref.query.action === 'edit' ) {
+		delete linkHref.query.redlink;
+		delete linkHref.query.action;
+	}
+
 	const queryLength = Object.keys( linkHref.query ).length;
 	let title;
 
