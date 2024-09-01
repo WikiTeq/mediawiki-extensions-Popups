@@ -152,6 +152,7 @@
 			"dependencies": [
 				"web2017-polyfills",
 				"mediawiki.experiments",
+				"mediawiki.ForeignApi",
 				"mediawiki.jqueryMsg",
 				"mediawiki.storage",
 				"mediawiki.Title",

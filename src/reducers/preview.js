@@ -96,6 +96,36 @@ export default function preview( state, action ) {
 				promise: action.promise
 			} );
 
+		case actionTypes.FETCH_FAILED:
+			// If the fetch failed and now the element has the
+			// `opensearch-results` attribute as an empty string, we should
+			// immediately restore the `title` text by abandoning the popup
+			// work; unlike actions.abandon() no need to abort requests or
+			// have a delay, since we want the title as soon as possible and
+			// there should not be any open requests
+			if ( action.el &&
+				action.el.hasAttribute( 'opensearch-results' ) &&
+				action.el.getAttribute( 'opensearch-results' ) === '' &&
+				// Match the token condition from ABANDON_END above, but not
+				// the isUserDwelling one, which would have been set to false
+				// by the ABANDON_START handler above
+				action.token === state.activeToken
+			) {
+				// Match the result from ABANDON_END above, but also set
+				// isUserDwelling to false
+				return nextState( state, {
+					activeLink: undefined,
+					previewType: undefined,
+					activeToken: undefined,
+					measures: undefined,
+					fetchResponse: undefined,
+					shouldShow: false,
+					isUserDwelling: false
+				} );
+			}
+			// No change
+			return state;
+
 		case actionTypes.FETCH_COMPLETE:
 			if ( action.token === state.activeToken ) {
 				return nextState( state, {

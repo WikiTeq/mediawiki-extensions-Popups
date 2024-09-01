@@ -31,7 +31,9 @@ const EXCLUDED_LINK_SELECTORS = [
 	// ignore links that point to the same article
 	'.mw-selflink',
 	'.image',
-	'.new',
+	// Since we are fetching from the English Wikipedia, ignore if a local page
+	// does not exist; SEL-1387
+	// '.new',
 	'.internal',
 	'.external',
 	'.mw-cite-backlink a',
