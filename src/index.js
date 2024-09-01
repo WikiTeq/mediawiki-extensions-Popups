@@ -27,7 +27,9 @@ import setUserConfigFlags from './setUserConfigFlags';
 const EXCLUDED_LINK_SELECTORS = [
 	'.extiw',
 	'.image',
-	'.new',
+	// Since we are fetching from the English Wikipedia, ignore if a local page
+	// does not exist; SEL-1387
+	// '.new',
 	'.internal',
 	'.external',
 	'.mw-cite-backlink a',

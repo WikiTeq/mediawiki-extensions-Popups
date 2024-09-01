@@ -224,6 +224,7 @@
 				"ext.popups.icons",
 				"ext.popups.images",
 				"mediawiki.experiments",
+				"mediawiki.ForeignApi",
 				"mediawiki.jqueryMsg",
 				"mediawiki.storage",
 				"mediawiki.Title",

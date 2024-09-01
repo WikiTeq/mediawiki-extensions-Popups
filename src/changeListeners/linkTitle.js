@@ -17,6 +17,15 @@ export default function linkTitle() {
 	 * @param {Element|undefined} el
 	 */
 	function destroyTitleAttr( el ) {
+		// If we already know that there is no page on the English Wikipedia,
+		// no need to hide the title
+		if ( el &&
+			el.hasAttribute( 'opensearch-results' ) &&
+			el.getAttribute( 'opensearch-results' ) === ''
+		) {
+			return;
+		}
+
 		// Has the user dwelled on a link? If we've already removed its title attribute, then NOOP.
 		if ( el && !savedTitle ) {
 			const $el = $( el );

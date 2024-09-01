@@ -197,6 +197,11 @@ export function fetch( gateway, title, el, token, type ) {
 					showNullPreview = !( isNetworkError || result.textStatus === 'abort' );
 				}
 
+				if ( ex.message === 'opensearch-no-results' ) {
+					// No page on the English Wikipedia, but no error needed
+					showNullPreview = false;
+				}
+
 				if ( showNullPreview ) {
 					dispatch( {
 						type: types.FETCH_COMPLETE,
