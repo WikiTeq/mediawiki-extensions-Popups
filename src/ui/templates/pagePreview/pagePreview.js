@@ -35,7 +35,9 @@ export function renderPagePreview(
 	const linkDiscreet = el.querySelector( '.mwe-popups-discreet' );
 	const extract = el.querySelector( '.mwe-popups-extract' );
 	extract.setAttribute( 'href', model.url );
+	extract.setAttribute( 'target', '_blank' );
 	linkDiscreet.setAttribute( 'href', model.url );
+	linkDiscreet.setAttribute( 'target', '_blank' );
 	extract.setAttribute( 'dir', model.languageDirection );
 	extract.setAttribute( 'lang', model.languageCode );
 

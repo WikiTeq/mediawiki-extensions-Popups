@@ -41,7 +41,26 @@ export default function createRestOpenSearchGateWay(
 	}
 
 	/**
-	 * Wrapper around the rest base fetchPreviewForTitle()
+	 * Update model link to point to the English Wikipedia, SEL-1348
+	 *
+	 * @param {PagePreviewModel} model
+	 * @return {PagePreviewModel}
+	 */
+	function updatePreviewLink( model ) {
+		const uri = new mw.Uri( model.url );
+		// Point to the English Wikipedia and use https
+		uri.host = 'en.wikipedia.org';
+		uri.protocol = 'https';
+		// Drop some parts that might be set from the local wiki
+		uri.password = undefined;
+		uri.port = undefined;
+		model.url = uri.toString();
+		return model;
+	}
+
+	/**
+	 * Wrapper around the rest base implementation of fetchPreviewForTitle(),
+	 * except that we also need to update the link URLs, SEL-1348
 	 *
 	 * @param {mw.Title} title
 	 * @param {HTMLAnchorElement} link
@@ -63,7 +82,7 @@ export default function createRestOpenSearchGateWay(
 			return restParts.fetchPreviewForTitle(
 				new mw.Title( foundTitle ),
 				link
-			);
+			).then( ( model ) => updatePreviewLink( model ) );
 		}
 
 		return enwikiAPI.get( {
@@ -83,7 +102,9 @@ export default function createRestOpenSearchGateWay(
 				}
 				const pageName = pageNames[ 0 ];
 				link.setAttribute( 'opensearch-results', pageName );
-				return restParts.fetchPreviewForTitle( new mw.Title( pageName ) );
+				return restParts.fetchPreviewForTitle(
+					new mw.Title( pageName )
+				).then( ( model ) => updatePreviewLink( model ) );
 			},
 			// catch() handler, but NOT attaching with .catch() because we do
 			// not want this to catch the rejections with opensearch-no-results
