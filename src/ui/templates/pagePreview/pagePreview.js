@@ -31,7 +31,9 @@ export function renderPagePreview(
 	const $el = renderPopup( model.type, createNodeFromTemplate( templateHTML ) );
 
 	$el.find( '.mwe-popups-discreet, .mwe-popups-extract' )
-		.attr( 'href', model.url );
+		.attr( 'href', model.url )
+		// Open in new tab
+		.attr( 'target', '_blank' );
 
 	$el.find( '.mwe-popups-extract' )
 		.attr( 'dir', model.languageDirection )
