@@ -5,6 +5,7 @@
 /** @typedef {function(JQuery.AjaxSettings=): JQuery.jqXHR} Ajax */
 
 import restGatewayCreator from './rest.js';
+import { previewTypes } from '../preview/model';
 
 /**
  * Wraps an instance of the restbase gateway with an opensearch api call,
@@ -104,7 +105,17 @@ export default function createRestOpenSearchGateWay(
 				link.setAttribute( 'opensearch-results', pageName );
 				return restParts.fetchPreviewForTitle(
 					new mw.Title( pageName )
-				).then( ( model ) => updatePreviewLink( model ) );
+				).then( ( model ) => {
+					if ( model.type === previewTypes.TYPE_GENERIC ) {
+						// For pages with no summary to show, we don't show a
+						// popup at all - just reuse the logic from if there
+						// were no search results, which will also prevent
+						// future rendering attempts
+						link.setAttribute( 'opensearch-results', '' );
+						return $.Deferred().reject( 'opensearch-no-results' );
+					}
+					return updatePreviewLink( model );
+				} );
 			},
 			// catch() handler, but NOT attaching with .catch() because we do
 			// not want this to catch the rejections with opensearch-no-results
