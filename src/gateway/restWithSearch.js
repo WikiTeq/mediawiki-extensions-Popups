@@ -106,11 +106,14 @@ export default function createRestOpenSearchGateWay(
 				return restParts.fetchPreviewForTitle(
 					new mw.Title( pageName )
 				).then( ( model ) => {
-					if ( model.type === previewTypes.TYPE_GENERIC ) {
+					if ( model.type === previewTypes.TYPE_GENERIC ||
+						model.type === previewTypes.TYPE_DISAMBIGUATION
+					) {
 						// For pages with no summary to show, we don't show a
 						// popup at all - just reuse the logic from if there
 						// were no search results, which will also prevent
 						// future rendering attempts
+						// Same with disambiguation pages
 						link.setAttribute( 'opensearch-results', '' );
 						return $.Deferred().reject( 'opensearch-no-results' );
 					}
