@@ -1,0 +1,19 @@
+name: Automated Warning on Merge
+
+on:
+  # limit workflow runs to PRs only
+  pull_request:
+    # limit workflow runs to closed event only
+    types: [closed]
+
+jobs:
+  call-warn-merge-workflow:
+    # only run this job if the target branch of this PR is `master` and the repo owner is WikiTeq
+    # and ignore completely on merges
+    if: |
+      github.event.pull_request.merged == true &&
+      github.repository_owner == 'wikiteq' &&
+      github.event.pull_request.base.ref == 'master'
+    uses: wikiteq/selfiie-workflows/.github/workflows/automated-warn-merge.yml@master
+    secrets:
+      slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}

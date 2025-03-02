@@ -1,0 +1,37 @@
+name: Automated Pull from Selfii
+
+on:
+  # note: this workflow can not use `schedule`
+  workflow_dispatch:
+    inputs:
+      receiver_target_branch:
+        default: 'master'
+        required: false
+        type: string
+        description: 'Override for the branch name to pull changes INTO'
+      source_base_branch:
+        default: 'main'
+        required: false
+        type: string
+        description: 'Override for the branch name to pull changes FROM'
+
+# Ensure only one run executes at a time, queuing others
+concurrency:
+  group: sync-from-selfiie
+  cancel-in-progress: false
+
+jobs:
+  call-pull-workflow:
+    # only run on WikiTeq environments
+    if: github.repository_owner == 'wikiteq'
+    uses: wikiteq/selfiie-workflows/.github/workflows/automated-pull.yml@master
+    with:
+      target_org: SelfiieCorporation
+      receiver_target_branch: ${{ github.event.inputs.receiver_target_branch || 'master' }}
+      source_base_branch: ${{ github.event.inputs.source_base_branch || 'main' }}
+      pat_username: WikiteqMachine
+      git_config_username: WikiteqMachine
+      git_config_email: 'support+WikiteqMachine@wikiteq.com'
+    secrets:
+      pat_token: ${{ secrets.WIKITEQMACHINE }}
+      slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
